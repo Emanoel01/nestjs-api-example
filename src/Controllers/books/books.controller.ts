@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { Book } from 'src/database/interfaces/books.interface';
 import { BooksService } from 'src/services/books/books.service';
 import { BookDTO } from '../../DTO/books.dto';
 
@@ -11,18 +21,23 @@ export class BooksController {
     return await this.bookService.getAllBooks();
   }
 
+  @Get(':bookID')
+  async getBookByID(@Param('bookID') bookID: string): Promise<Book> {
+    return await this.bookService.getBookByID(bookID);
+  }
+
   @Post()
   async saveBooks(@Body() newBook: BookDTO): Promise<BookDTO> {
     return await this.bookService.saveBook(newBook);
   }
 
-  @Patch()
-  updateBook(): string {
-    return 'este libro fueste atualizado';
+  @Patch(':bookID')
+  async updateBook(@Param('bookID') bookID: string, @Body() newBook: BookDTO): Promise<Book> {
+    return await this.bookService.updateBookByID(bookID, newBook)
   }
 
-  @Delete()
-  deleteBok(): string {
-    return 'este livro foi deletado ';
+  @Delete(':bookID')
+  async deleteBook(@Param('bookID') bookID: string): Promise<Book> {
+    return await this.bookService.deleteBook(bookID);
   }
 }
